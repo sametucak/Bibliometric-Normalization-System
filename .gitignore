@@ -1,0 +1,40 @@
+# Python
+
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+
+.venv/
+venv/
+env/
+
+# Jupyter
+
+.ipynb_checkpoints/
+
+# Packaging
+
+build/
+dist/
+*.egg-info/
+
+# IDE
+
+.vscode/
+.idea/
+
+# Operating system
+
+.DS_Store
+Thumbs.db
+
+# Logs
+
+*.log
+
+# Project data and output
+
+input/
+output/
