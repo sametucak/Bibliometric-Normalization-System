@@ -18,25 +18,21 @@ from .similarity import (
 )
 
 def get_first_initial(author_name: str) -> str:
-    """
-    Extract the first initial from an author name.
-    Example:
-        'Lugli, Gabriele Andrea' -> 'G'
-        'Lugli, G. Andrea' -> 'G'
-    """
+    """Extract the first initial from a WoS author name."""
     try:
-        given = author_name.split(",")[1].strip()
-
-        m = re.match(r"([A-Za-z])", given)
-
+        author_name = str(author_name).strip()
+        if ',' in author_name:
+            given = author_name.split(',', 1)[1].strip()
+        else:
+            parts = author_name.split()
+            given = parts[1] if len(parts) > 1 else ''
+        m = re.match(r'([A-Za-z])', given)
         if m:
             return m.group(1).upper()
-
     except Exception:
         pass
+    return ''
 
-    return ""
-    
 def build_merge_candidates(author_groups: dict) -> pd.DataFrame:
     """
     Build candidate author pairs using:
@@ -142,11 +138,7 @@ def select_canonical_author(
     author_a: str,
     author_b: str,
 ) -> str:
-    """
-    Select the canonical (preferred) author name
-    between two equivalent author names.
-    """
-
+    """Select the canonical (preferred) author name."""
     score_a = 0
     score_b = 0
 
@@ -161,8 +153,17 @@ def select_canonical_author(
     if "." not in author_b:
         score_b += 1
 
-    given_a = author_a.split(",")[1].strip()
-    given_b = author_b.split(",")[1].strip()
+    if ',' in author_a:
+        given_a = author_a.split(',', 1)[1].strip()
+    else:
+        parts_a = author_a.split()
+        given_a = ' '.join(parts_a[1:]) if len(parts_a) > 1 else ''
+
+    if ',' in author_b:
+        given_b = author_b.split(',', 1)[1].strip()
+    else:
+        parts_b = author_b.split()
+        given_b = ' '.join(parts_b[1:]) if len(parts_b) > 1 else ''
 
     if len(given_a) > len(given_b):
         score_a += 1
@@ -173,7 +174,7 @@ def select_canonical_author(
         return author_a
 
     return author_b
-    
+
 def build_author_lookup(
     df: pd.DataFrame,
 ) -> pd.DataFrame:
@@ -202,15 +203,16 @@ def build_author_lookup(
 def build_author_groups(
     df: pd.DataFrame,
 ) -> dict:
-    """
-    Group normalized authors by surname.
-    """
-
+    """Group normalized authors by surname."""
     groups = {}
 
     for author in df["normalized_author"].dropna().unique():
-
-        lastname = author.split(",")[0].strip()
+        author = str(author).strip()
+        if ',' in author:
+            lastname = author.split(',', 1)[0].strip()
+        else:
+            parts = author.split()
+            lastname = parts[0].strip() if parts else ''
 
         groups.setdefault(lastname, []).append(author)
 
