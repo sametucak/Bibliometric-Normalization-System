@@ -44,13 +44,30 @@ def normalize_author_name(author: str) -> str:
     
 def extract_last_name(author):
     """
-    Extract surname from author name.
+    Extract surname from WoS author name formats.
     """
 
-    if "," in author:
-        return author.split(",")[0].strip()
+    if pd.isna(author):
+        return ""
 
-    return author.strip()
+    author = str(author).strip()
+
+    if not author:
+        return ""
+
+    if "," in author:
+        return author.split(",", 1)[0].strip().lower()
+
+    parts = author.split()
+
+    if len(parts) == 1:
+        return parts[0].strip().lower()
+
+    # WoS commonly uses 'Surname Initial' or 'Surname FullName'.
+    if len(parts[0]) == 1:
+        return parts[-1].strip().lower()
+
+    return parts[0].strip().lower()
 
 def normalize_affiliation(text):
     """
