@@ -4,39 +4,39 @@
 
 ## Overview
 
-Bibliometric datasets frequently contain inconsistencies in author names, affiliations, keywords, column structures, and bibliometric metadata. These inconsistencies can affect author-level analyses and the reproducibility of bibliometric studies.
+Bibliometric datasets frequently contain inconsistencies in author names, affiliations, keywords, column structures, and bibliometric metadata. These inconsistencies can affect author-level analyses and reproducibility.
 
 BNS provides an end-to-end workflow for:
 
-* Data cleaning
-* Web of Science column standardization
-* Author name normalization
-* Author grouping
-* Author similarity analysis
-* Author disambiguation
-* Merge candidate generation
-* Confidence scoring
-* Author ID assignment
-* Bibliometric indicator calculation
-* Structured Excel and CSV export
+- Data cleaning
+- Web of Science column mapping and standardization
+- Author name normalization
+- Author grouping
+- Fuzzy similarity analysis
+- Author disambiguation
+- Merge candidate generation
+- Confidence scoring
+- Author ID assignment
+- Bibliometric indicator calculation
+- Excel and CSV export
 
-The system is designed with a modular architecture and automated tests to support reproducible and maintainable bibliometric data processing.
+The project uses a modular Python architecture with automated tests to support reproducible and maintainable bibliometric data processing.
 
 ## Key Features
 
-* Automated bibliometric data cleaning
-* Web of Science column mapping and standardization
-* Author name normalization
-* Author grouping
-* Fuzzy similarity analysis using RapidFuzz
-* Author merge candidate generation
-* Confidence-based author disambiguation
-* Automatic merge and manual review classification
-* Unique Author ID assignment
-* Author-level bibliometric indicators
-* Excel and CSV export
-* Modular Python architecture
-* Automated test suite
+- Web of Science data cleaning and column standardization
+- Author name and affiliation normalization
+- Keyword normalization
+- Author grouping and candidate generation
+- Fuzzy similarity analysis using RapidFuzz
+- Confidence-based author disambiguation
+- Automatic merge and manual review classification
+- Unique Author ID assignment
+- Author-level bibliometric indicators
+- Excel and CSV export
+- Command-line pipeline
+- Graphical user interface (GUI)
+- Automated test suite
 
 ## Workflow
 
@@ -53,28 +53,49 @@ BNS processes bibliometric data through the following workflow:
 9. Apply author merges
 10. Assign unique Author IDs
 11. Calculate author-level bibliometric indicators
-12. Export normalized data and analysis results
+12. Export processed results
+
+## Normalization and Disambiguation
+
+BNS standardizes bibliographic fields before author-level analysis.
+
+Author normalization includes:
+
+- Author name normalization
+- Last-name extraction
+- Affiliation normalization
+- Keyword normalization
+
+Author similarity analysis uses RapidFuzz-based fuzzy matching together with available author metadata.
+
+Merge candidates receive confidence scores and are classified into decisions such as:
+
+- Automatic merge
+- Manual review
+- Different authors
+
+The system also assigns a canonical author representation and a unique Author ID to normalized author groups.
 
 ## Bibliometric Indicators
 
-The current version provides the following author-level indicators:
+BNS calculates the following author-level indicators:
 
-* Publication count
-* Citation count
-* Average citations
-* h-index
-* i10-index
-* First publication year
-* Last publication year
-* Academic age
+- Publication count
+- Citation count
+- Average citations
+- h-index
+- i10-index
+- First publication year
+- Last publication year
+- Academic age
 
 ## Generated Outputs
 
-The BNS pipeline generates the following files:
+The pipeline generates the following primary Excel outputs:
 
 ### `Normalized_WoS_Data.xlsx`
 
-Normalized and processed Web of Science records, including standardized author information and assigned Author IDs.
+Normalized and processed Web of Science records, including standardized author information, canonical author information, and assigned Author IDs.
 
 ### `Author_Metrics.xlsx`
 
@@ -82,7 +103,9 @@ Author-level bibliometric indicators including publication count, citation count
 
 ### `Merge_Report.xlsx`
 
-Author merge candidates, confidence scores, and merge decisions for author disambiguation.
+Author merge candidates, confidence scores, and merge decisions generated during author disambiguation.
+
+The GUI allows the user to select the output directory. The command-line pipeline uses the project's configured output directory.
 
 ## Project Structure
 
@@ -100,6 +123,7 @@ Bibliometric-Normalization-System/
 |   |-- test_merge_engine.py
 |   `-- test_similarity.py
 |-- src/
+|   |-- __init__.py
 |   |-- author_id.py
 |   |-- author_normalization.py
 |   |-- cleaning.py
@@ -113,135 +137,9 @@ Bibliometric-Normalization-System/
 |   |-- similarity.py
 |   `-- utils.py
 |-- main.py
+|-- gui.py
 |-- README.md
 |-- LICENSE
 |-- requirements.txt
 |-- pyproject.toml
 `-- .gitignore
-```
-
-## Requirements
-
-* Python 3.12 or later
-* pandas
-* openpyxl
-* RapidFuzz
-
-Development and testing additionally require pytest.
-
-## Installation
-
-### Clone the repository
-
-```bash
-git clone https://github.com/<your-username>/Bibliometric-Normalization-System.git
-cd Bibliometric-Normalization-System
-```
-
-### Create a virtual environment
-
-Windows:
-
-```bash
-python -m venv .venv
-```
-
-Activate:
-
-```bash
-.venv\Scripts\activate
-```
-
-Linux / macOS:
-
-```bash
-python -m venv .venv
-source .venv/bin/activate
-```
-
-### Install dependencies
-
-```bash
-python -m pip install -r requirements.txt
-```
-
-For development and testing:
-
-```bash
-python -m pip install -e ".[dev]"
-```
-
-## Usage
-
-Place the Web of Science Excel dataset in the `input/` directory.
-
-The current example workflow expects:
-
-```text
-input/combining yazar listesi.xlsx
-```
-
-Run the complete BNS pipeline with:
-
-```bash
-python main.py
-```
-
-The generated results will be written to the `output/` directory.
-
-## Testing
-
-BNS includes an automated test suite covering configuration, author normalization, similarity analysis, merge logic, Author ID assignment, bibliometric indicators, and output generation.
-
-Run all tests with:
-
-```bash
-python -m pytest -v
-```
-
-Current test status:
-
-```text
-33 passed
-```
-
-## Build
-
-The project uses the Python `pyproject.toml` packaging standard and setuptools.
-
-Build the package with:
-
-```bash
-python -m build
-```
-
-The build generates source and wheel distributions in the `dist/` directory.
-
-## Release
-
-**Version:** 1.0.0
-
-**Status:** Release Ready
-
-The v1.0.0 release includes:
-
-* Complete bibliometric data normalization workflow
-* Author name normalization and disambiguation
-* Author ID assignment
-* Author-level bibliometric indicators
-* Excel and CSV export
-* Automated test suite
-* Python package build configuration
-* MIT License
-
-## License
-
-This project is licensed under the MIT License. See the LICENSE file for details.
-
-## Author
-
-**Samet UCAK**
-
-Associate Professor of Molecular Biology and Genetics
-Istanbul Aydin University
-Turkiye
